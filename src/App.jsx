@@ -11,6 +11,7 @@ function App() {
   const [users, setUsers] = useState([]);
   const [view, setView] = useState("listar");
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [editingId, setEditingId] = useState("");
   const [message, setMessage] = useState("");
 
@@ -28,23 +29,35 @@ function App() {
     setMessage("")
   }, [view]);
 
-  function handleCreateUser() {
+  async function handleCreateUser() {
     if (!name.trim()) return;
 
-    const newUser = {
-      id: users.length + 1,
-      name: name,
-    };
+    try {
+    const response = await api.post("/users", {
+      name,
+      email,
+    });
 
-    setUsers([...users, newUser]);
+    setUsers([...users, response.data]);
     setName("");
+    setEmail("");
     setMessage("Usuário criado com sucesso");
+    } catch (error) {
+      console.log(error);
+      setMessage("Erro ao criar usuário");
+    }
   }
 
-  function handleDeleteUser(id) {
-    const filteredUsers = users.filter((user) => user.id !== id);
-    setUsers(filteredUsers);
-    setMessage("Usuário apagado com sucesso");
+  async function handleDeleteUser(id) {
+    try{
+      await api.delete(`/users/${id}`);
+      const filteredUsers = users.filter((user) => user.id !== id);
+      setUsers(filteredUsers);
+      setMessage("Usuário apagado com sucesso");
+    } catch (error) {
+      console.log(error);
+      setMessage("Erro ao deleter usuário");
+    }
   }
 
   function startEdit(user) {
@@ -53,15 +66,25 @@ function App() {
     setView("editar");
   }
 
-  function handleUpdateUser() {
-    const updatedUsers = users.map((user) =>
-      user.id === editingId ? { ...user, name } : user
-    );
+  async function handleUpdateUser() {
+    try{
+      const response = await api.update(`/users/${editingId}`, {
+        name,
+        email,
+      });
 
-    setUsers(updatedUsers);
-    setEditingId("");
-    setName("");
-    setMessage("Usuário atualizado com sucesso");
+      const updatedUsers = users.map((user) =>
+        user.id === editingId ? response.data : user
+      );
+      setUsers(updatedUsers);
+      setEditingId(null);
+      setName("");
+      setEmail("");
+      setMessage("Usuário atualizado com sucesso");
+    } catch (error) {
+      console.log(error);
+      setMessage("Erro ao atualizar usuário");
+    }
   }
 
   function renderView() {
@@ -75,6 +98,8 @@ function App() {
           name={name}
           setName={setName}
           handleCreateUser={handleCreateUser}
+          email={email}
+          setEmail={setEmail}
         />
       );
     }
