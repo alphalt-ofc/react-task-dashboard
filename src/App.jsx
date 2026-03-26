@@ -63,12 +63,13 @@ function App() {
   function startEdit(user) {
     setEditingId(user.id);
     setName(user.name);
+    setEmail(user.email);
     setView("editar");
   }
 
   async function handleUpdateUser() {
     try{
-      const response = await api.update(`/users/${editingId}`, {
+      const response = await api.put(`/users/${editingId}`, {
         name,
         email,
       });
@@ -76,6 +77,7 @@ function App() {
       const updatedUsers = users.map((user) =>
         user.id === editingId ? response.data : user
       );
+
       setUsers(updatedUsers);
       setEditingId(null);
       setName("");
@@ -112,6 +114,8 @@ function App() {
           setName={setName}
           startEdit={startEdit}
           handleUpdateUser={handleUpdateUser}
+          email={email}
+          setEmail={setEmail}
         />
       );
     }

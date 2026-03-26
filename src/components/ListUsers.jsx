@@ -5,9 +5,12 @@ function ListUsers({users}) {
             <h2 className="text-4xl mb-6">Lista de usuários</h2>
             <ul className="flex flex-col gap-3">
                 {users.map((user) => (
-                <li className="flex justify-between" key={user.id}>
-                    <span>{user.name}</span>
-                    <span>{user.id}</span> 
+                <li className="flex flex-col text-start" key={user.id}>
+                    <div className="flex justify-between">
+                        <span>{user.name}</span>
+                        <span>{user.id}</span> 
+                    </div>
+                    <span className="text-[12px] text-gray-400">{user.email}</span>
                 </li>
                 ))}
             </ul>

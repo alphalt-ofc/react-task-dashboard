@@ -1,7 +1,7 @@
 import GenericButton from "./ui/GenericButton";
 import GenericInput from "./ui/GenericInput";
 
-function EditUser({users, name, setName, startEdit, handleUpdateUser}) {
+function EditUser({users, name, setName, startEdit, handleUpdateUser, email, setEmail}) {
   return (
     <div className="flex w-full justify-center">
         <div className="flex flex-col gap-7 w-100">
@@ -24,6 +24,13 @@ function EditUser({users, name, setName, startEdit, handleUpdateUser}) {
                 placeholder="Novo nome"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+            />
+
+            <GenericInput
+                type="text"
+                placeholder="Novo email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
             />
 
             <button onClick={handleUpdateUser}>Atualizar</button>
